@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-server
+data
+.git
+.gitignore
+*.log
+coverage
+.DS_Store
+docs
+.codemie
+.claude
+Dockerfile
+docker-compose.yml
+README.md
