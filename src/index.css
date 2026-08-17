@@ -1,0 +1,361 @@
+:root {
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  color-scheme: light dark;
+  line-height: 1.5;
+  --blue: #4d90fe;
+  --text-grey: light-dark(#394761, #9ba6ba);
+}
+
+.blue {
+  color: var(--blue);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: start center;
+  background: Canvas;
+  color: CanvasText;
+}
+
+.app {
+  width: min(640px, 92vw);
+  height: 100vh;
+  padding: 3rem 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.status::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status--live {
+  color: #1a9c50;
+  background: color-mix(in srgb, #1a9c50 15%, transparent);
+}
+
+.status--offline {
+  color: #c07800;
+  background: color-mix(in srgb, #c07800 15%, transparent);
+}
+
+.subtitle {
+  margin: 0.25rem 0 1.5rem;
+  opacity: 0.7;
+}
+
+.add-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.add-form input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+  border-radius: 8px;
+  background: Canvas;
+  color: CanvasText;
+}
+
+.add-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #646cff;
+  color: white;
+  cursor: pointer;
+}
+
+.add-form button:hover {
+  background: #535bf2;
+}
+
+.flags {
+  list-style: none;
+  padding: 0.55rem 0.55rem 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.flags::-webkit-scrollbar {
+  display: none;
+}
+
+.flag {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid color-mix(in srgb, CanvasText 15%, transparent);
+  border-radius: 8px;
+}
+
+/* A delete pop-up pinned to the top-right corner, revealed on hover so the
+   list item doesn't show a permanent delete affordance. */
+.flag__delete {
+  position: absolute;
+  top: -0.55rem;
+  right: -0.55rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #dc2626;
+  color: white;
+  font-size: 0;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  visibility: hidden;
+  transform: scale(0.85);
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.flag__delete::before,
+.flag__delete::after {
+  content: "";
+  position: absolute;
+  width: 0.65rem;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+}
+
+.flag:hover .flag__delete,
+.flag__delete:focus-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.flag__delete:hover {
+  background: #b91c1c;
+}
+
+.flag__name {
+  font-weight: 500;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Toggle switch: a visually-hidden checkbox drives a styled track + knob. */
+.switch {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.switch__track {
+  width: 4.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, CanvasText 25%, transparent);
+  transition: background 0.15s ease;
+}
+
+.switch__track::before {
+  content: "";
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.15s ease;
+}
+
+.switch input:checked + .switch__track {
+  background: #1a9c50;
+}
+
+.switch input:checked + .switch__track::before {
+  transform: translateX(3rem);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 2px solid #646cff;
+  outline-offset: 2px;
+}
+
+.error {
+  color: #d33;
+  white-space: pre-wrap;
+}
+
+.add-form-wrap {
+  position: relative;
+}
+
+.error-popup {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  background: Canvas;
+  border: 1px solid color-mix(in srgb, #d33 40%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.error-popup .error {
+  margin: 0;
+}
+
+.test-page {
+  margin-top: 2rem;
+}
+
+.test-flag-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.test-flag-picker select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid color-mix(in srgb, CanvasText 25%, transparent);
+  border-radius: 8px;
+  background: Canvas;
+  color: CanvasText;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.test-flag-picker select option {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.loading {
+  margin-top: 1rem;
+  color: #0066cc;
+  font-weight: 500;
+}
+
+.response {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--blue);
+  color: var(--text-grey);
+}
+
+.response-enabled {
+  color: #11791d;
+}
+
+.response-disabled {
+  color: #921e20;
+}
+
+.test-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  padding: 2rem;
+  /* border-block: 1px solid color-mix(in srgb, CanvasText 15%, transparent); */
+  border-left: 4px solid var(--blue);
+}
+
+.test-section h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.section-note {
+  font-size: 0.875rem;
+  color: color-mix(in srgb, CanvasText 60%, transparent);
+  margin: 0 0 1rem 0;
+}
+
+.throttled-button {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #ff6b35;
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.throttled-button:hover:not(:disabled) {
+  background: #e85a2a;
+}
+
+.throttled-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
