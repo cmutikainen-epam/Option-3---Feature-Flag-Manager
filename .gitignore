@@ -7,7 +7,10 @@ dist-server/
 *.tsbuildinfo
 
 # SQLite database files
-data/
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
 *.sqlite
 *.sqlite3
 *.db
@@ -31,6 +34,9 @@ npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 *.swp
+.codemie
+.claude
+docs/codemie/analytics
 
 # Test / coverage
 coverage/

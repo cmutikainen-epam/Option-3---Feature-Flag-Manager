@@ -79,3 +79,78 @@ export const changeJournalMode = (mode: string): Effect.Effect<string, string> =
 
 export const getJournalMode = (): Effect.Effect<string, string> =>
   request<string>(`/api/journal-mode`, { method: 'GET' })
+/** Callbacks driving a single streamed `/api/agent/chat` exchange. */
+export interface AgentChatStreamHandlers {
+  readonly onDelta: (text: string) => void;
+  readonly onError: (message: string) => void;
+  readonly onDone: () => void;
+}
+
+/**
+ * Send one chat message about a flag to pi and stream the reply back token
+ * by token over Server-Sent Events. Unlike the rest of this module, this
+ * isn't Effect-based: the response is a stream of callback invocations over
+ * time, not a single decoded value, so there's no single `A` for an
+ * `Effect.Effect<A, string>` to resolve with. Returns a function that aborts
+ * the in-flight request (e.g. on unmount or when the modal is closed).
+ */
+export const streamAgentChat = (
+  flagName: string,
+  message: string,
+  handlers: AgentChatStreamHandlers,
+): (() => void) => {
+  const controller = new AbortController();
+
+  void (async () => {
+    try {
+      const res = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flagName, message }),
+        signal: controller.signal,
+      });
+      if (!res.body) throw new Error("Could not reach the server. Please check your connection and try again.");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // SSE events are separated by a blank line; keep any trailing partial
+        // event in the buffer until more bytes arrive.
+        const events = buffer.split("\n\n");
+        buffer = events.pop() ?? "";
+
+        for (const chunk of events) {
+          let eventName = "message";
+          let data = "";
+          for (const line of chunk.split("\n")) {
+            if (line.startsWith("event:")) eventName = line.slice("event:".length).trim();
+            else if (line.startsWith("data:")) data += line.slice("data:".length).trim();
+          }
+          if (!data) continue;
+
+          const parsed = JSON.parse(data) as { text?: string; message?: string };
+          if (eventName === "delta" && typeof parsed.text === "string") {
+            handlers.onDelta(parsed.text);
+          } else if (eventName === "error") {
+            handlers.onError(parsed.message ?? "Something unexpected happened.");
+          } else if (eventName === "done") {
+            handlers.onDone();
+          }
+        }
+      }
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      handlers.onError(
+        error instanceof Error ? error.message : "Could not reach the server. Please check your connection and try again.",
+      );
+    }
+  })();
+
+  return () => controller.abort();
+};

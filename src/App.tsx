@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useFeatureFlags } from "./useFeatureFlags";
+import AgentChatModal from "./AgentChatModal";
 
 export default function App() {
   const { flags, loading, connected, error, addFlag, toggleFlag, deleteFlag, clearError } =
     useFeatureFlags();
   const [name, setName] = useState("");
+  const [chatFlagName, setChatFlagName] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (!error) return;
@@ -79,6 +81,14 @@ export default function App() {
               </label>
               <button
                 type="button"
+                className="flag__chat"
+                aria-label={`Chat about ${flag.name}`}
+                onClick={() => setChatFlagName(flag.name)}
+              >
+                💬
+              </button>
+              <button
+                type="button"
                 className="flag__delete"
                 aria-label={`Delete ${flag.name}`}
                 onClick={() => {
@@ -90,6 +100,10 @@ export default function App() {
             </li>
           ))}
         </ul>
+      )}
+
+      {chatFlagName && (
+        <AgentChatModal flagName={chatFlagName} onClose={() => setChatFlagName(undefined)} />
       )}
     </main>
   );
