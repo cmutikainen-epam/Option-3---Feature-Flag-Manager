@@ -31,6 +31,9 @@ npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
 *.swp
+.codemie
+.claude
+docs/codemie/analytics
 
 # Test / coverage
 coverage/

@@ -24,8 +24,9 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@earendil-works/pi-coding-agent": "^0.85.1",
     "better-sqlite3": "^11.10.0",
-    "effect": "^3.13.0",
+    "effect": "^4.0.0-rc.112",
     "express": "^4.21.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

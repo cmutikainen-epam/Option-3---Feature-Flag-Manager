@@ -36,7 +36,7 @@ export function attachWebSocket(server: Server): WebSocketServer {
   });
 
   // Broadcast the fresh list to all open clients on any DB change.
-  const unsubscribe = FlagsEventBus.onTableChange((timestamp) => {
+  const unsubscribe = FlagsEventBus.onTableChange((timestamp,) => {
     console.log(`Feature Flag Table Changed at ${timestamp}`);
     withFlags((flags) => {
       const message = encode(flags);
