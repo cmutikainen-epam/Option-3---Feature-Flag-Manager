@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    image: amx-takehome
+    ports:
+      # Browse to http://localhost:3001 once it's up.
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      DATABASE_PATH: /app/data/app.db
+    volumes:
+      # Persist the SQLite database across container restarts.
+      - app-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  app-data:
