@@ -15,6 +15,8 @@ import { updateFlag } from "./routes/updateFlag.js";
 import { deleteFlag } from "./routes/deleteFlag.js";
 import { changeJournalMode } from "./routes/changeJournalMode.js";
 import { getJournalMode } from "./routes/getJournalMode.js";
+import { chatWithAgent } from "./routes/chatWithAgent.js";
+import { sseHandler } from "./sse.js";
 
 const encodeApiError = Schema.encodeSync(ApiErrorSchema);
 
@@ -45,7 +47,7 @@ const handler =
       }
 
       // If not successful, we try to match the error type
-      const { status, body } = Option.match(Cause.failureOption(exit.cause), {
+      const { status, body } = Option.match(Cause.findErrorOption(exit.cause), {
         // We don't recognize the error, so we send 500 and create a generic message
         onNone: () => ({
           status: 500,
@@ -69,6 +71,7 @@ app.patch("/api/flags/:id", handler(updateFlag, { announce: true }));
 app.delete("/api/flags/:id", handler(deleteFlag, { announce: true }));
 app.get("/api/journal-mode", handler(getJournalMode));
 app.patch("/api/journal-mode", handler(changeJournalMode));
+app.post("/api/agent/chat", sseHandler(chatWithAgent));
 
 // In production, serve the built frontend from the same origin.
 // Skip in development so only the Vite dev server on 5173 serves the frontend.

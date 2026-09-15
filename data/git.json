@@ -1,0 +1,62 @@
+{
+  "dark-mode": {
+    "confidence": 0.61,
+    "warningMessage": "design-token-system branch has 3 unmerged commits touching CSS custom properties also modified in this flag's changeset. Merge conflict risk is moderate."
+  },
+  "new-onboarding-flow": {
+    "confidence": 0.44,
+    "warningMessage": "profile-service-v2 and email-verification are referenced in onboarding route guards but neither flag is currently enabled in staging. Enabling this flag before its dependencies may cause a blank wizard screen for new users."
+  },
+  "ai-suggestions": {
+    "confidence": 0.88,
+    "warningMessage": "No open PRs conflict with this changeset. Minor note: the model inference client is imported in three files that also touch the legacy editor; verify bundle size impact before rollout."
+  },
+  "profile-service-v2": {
+    "confidence": 0.72,
+    "warningMessage": "Two open PRs modify UserProfile.avatarUrl in the same files as this flag's migration script. Rebase recommended before enabling in production."
+  },
+  "billing-v3": {
+    "confidence": 0.38,
+    "warningMessage": "payment-provider-stripe is disabled in the current environment. Billing v3 will fall through to the legacy gateway at runtime, which has been deprecated and may return 402 on new account types."
+  },
+  "payment-provider-stripe": {
+    "confidence": 0.81,
+    "warningMessage": "Stripe webhook handler added in commit a3f9c12 overlaps with the legacy payment event listener on /api/payments/webhook. Confirm only one handler will be active after the flag is toggled."
+  },
+  "email-verification": {
+    "confidence": 0.93,
+    "warningMessage": "Changeset is clean. Note that disabling this flag after users have already verified will leave orphaned verification tokens in the auth_tokens table — a cleanup migration may be needed."
+  },
+  "design-token-system": {
+    "confidence": 0.55,
+    "warningMessage": "Global CSS variable names were renamed in this branch (--color-bg → --surface-bg). 14 component files in main still reference the old names; dark-mode will render incorrectly until those files are updated."
+  },
+  "export-to-csv": {
+    "confidence": 0.95,
+    "warningMessage": "No conflicts detected. The CSV serialiser is tree-shaken from the production bundle when the flag is off, so no size regression on disable."
+  },
+  "multi-region-failover": {
+    "confidence": 0.29,
+    "warningMessage": "monitoring-dashboard and alerting-pipeline-v2 are both disabled in production. Enabling failover without active alerting means region switch events will be silent. Health-check thresholds in the config also appear stale (last updated 6 months ago)."
+  },
+  "monitoring-dashboard": {
+    "confidence": 0.76,
+    "warningMessage": "Dashboard queries use a Prometheus scrape interval of 15 s, but the alerting-pipeline-v2 config expects 30 s. This mismatch causes duplicate alert firings in the staging environment."
+  },
+  "alerting-pipeline-v2": {
+    "confidence": 0.83,
+    "warningMessage": "Deduplication window defaults to 5 minutes. Existing on-call runbooks assume legacy alert IDs; the new pipeline generates UUIDs, so runbook links will break until updated."
+  },
+  "onboarding": {
+    "confidence": 0.44,
+    "warningMessage": "Alias for new-onboarding-flow. Same dependency warnings apply: profile-service-v2 and email-verification must be enabled first."
+  },
+  "billing": {
+    "confidence": 0.38,
+    "warningMessage": "Alias for billing-v3. payment-provider-stripe must be enabled before this flag is safe to turn on in production."
+  },
+  "feature-flag": {
+    "confidence": 0.90,
+    "warningMessage": "Meta-flag references detected in config loader. Toggling feature flags from within a feature-flagged code path can cause bootstrap ordering issues on cold start."
+  }
+}

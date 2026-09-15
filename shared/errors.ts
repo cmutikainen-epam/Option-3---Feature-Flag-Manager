@@ -56,10 +56,10 @@ export type ApiError =
  * decode it back into the matching tagged class (client), so the client can
  * pattern-match on `_tag` instead of a stringified status code.
  */
-export const ApiErrorSchema = Schema.Union(
+export const ApiErrorSchema = Schema.Union([
   BadRequestError,
   UnknownFlagError,
   ConflictError,
   DuplicateFlagError,
   DbError,
-);
+]);

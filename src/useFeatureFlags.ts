@@ -7,7 +7,7 @@ export type FeatureFlags = readonly FeatureFlag[];
 
 /** The failure's message if there is one, else a generic fallback. */
 const errorMessage = (cause: Cause.Cause<string>): string =>
-  Option.match(Cause.failureOption(cause), {
+  Option.match(Cause.findErrorOption(cause), {
     onNone: () => "Unexpected error",
     onSome: (message) => message,
   });
